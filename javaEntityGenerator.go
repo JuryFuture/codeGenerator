@@ -216,7 +216,10 @@ func generateClass(table, comment string) {
 	toString := generatorToString(className, columnNames)
 	content = strings.Replace(content, "{toString}", toString, -1)
 
-	fileName := "class/" + className + ".java"
+	dirName := "./class"
+	os.Mkdir(dirName, 0777)
+
+	fileName := dirName + "/" + className + ".java"
 	class, _ := os.Create(fileName)
 
 	defer class.Close()
