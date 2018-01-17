@@ -158,9 +158,7 @@ func getClassName(table string) (class string) {
 	}
 
 	subNames := strings.Split(table, "_")
-	class = strings.ToUpper(subNames[0][:1]) + subNames[0][1:]
-
-	for i := 1; i < len(subNames); i++ {
+	for i := 0; i < len(subNames); i++ {
 		class += strings.ToUpper(subNames[i][:1]) + subNames[i][1:]
 	}
 
