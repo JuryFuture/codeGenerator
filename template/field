@@ -1,0 +1,5 @@
+    /**
+     * {comment}
+     */{extra}
+    @Column(name = "{column}"){others}
+    private {fieldType} {fieldName};

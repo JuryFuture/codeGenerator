@@ -1,0 +1,13 @@
+[mysql]
+username=test
+password=Dev@hfq
+host=123.56.135.63
+port=3306
+schema=db_saas_platform
+table=
+[class]
+package=com.huifenqi.saas.context.entity.saas
+author=滕国栋
+[prefix]
+tablePrefix=t_
+columnPrefix=f_

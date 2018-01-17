@@ -1,0 +1,7 @@
+    public {fieldType} get{upperFieldName}() {
+        return {fieldName};
+    }
+
+    public void set{upperFieldName}({fieldType} {fieldName}) {
+        this.{fieldName} = {fieldName};
+    }
