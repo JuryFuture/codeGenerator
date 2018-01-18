@@ -99,15 +99,15 @@ func connect(userName, password, host, port, schema string) *sql.DB {
 }
 
 // 读取数据库中所有的表
-func readTables(table string) (tableNames, tableComments []string) {
+func readTables(tables []string) (tableNames, tableComments []string) {
 	db := connect(readConf())
 
 	defer db.Close()
 
 	schema := cnf.Section("mysql").Key("schema").String()
 	sql := "SELECT TABLE_NAME,TABLE_COMMENT FROM information_schema.`TABLES` WHERE table_schema = '" + schema + "' AND table_type = 'base table'"
-	if table != "" {
-		sql += " AND TABLE_NAME = '" + table + "'"
+	if len(tables) > 0 {
+		sql += " AND TABLE_NAME in ('" + strings.Join(tables, "','") + "')"
 	}
 	rows, _ := db.Query(sql)
 
@@ -304,8 +304,8 @@ func generatorToString(className string, columnNames []string) (str string) {
 }
 
 func main() {
-	table := cnf.Section("mysql").Key("table").String()
-	tableNames, tableComments := readTables(table)
+	tables := cnf.Section("mysql").Key("tables").String()
+	tableNames, tableComments := readTables(strings.Split(tables, ","))
 
 	for i := 0; i < len(tableNames); i++ {
 		generateClass(tableNames[i], tableComments[i])
