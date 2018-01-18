@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/code_generator.iml" filepath="$PROJECT_DIR$/code_generator.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mysqlTool.iml" filepath="$PROJECT_DIR$/mysqlTool.iml" />
     </modules>
   </component>
 </project>
