@@ -2,7 +2,6 @@ package tools
 
 import (
 	"fmt"
-	"github.com/go-ini/ini"
 	"os"
 	"strconv"
 	"strings"
@@ -10,10 +9,6 @@ import (
 
 var TABLE_TEMPLATE = "<p>-----------------------------</p><span>表名称: {{table_name}}</span></br><span>行数: {{column_num}}</span></br><span>注释: {{table_comment}}</span><table cellspacing='0'><thead><tr><td>字段名</th><td>类型</td><td>说明</td></tr></thead>{{items}}</table></br>"
 var TABLE_ELEMENT_TEMPLATE = "<tr><td>{{column_name}}<td>{{data_type}}</td><td>{{comment}}</td></th></tr>"
-
-func init() {
-	cnf, _ = ini.Load("../conf.ini")
-}
 
 func generateHtml(str string) {
 	dirName := "./html"

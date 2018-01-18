@@ -1,15 +1,13 @@
 package main
 
 import (
-	"flag"
+	"github.com/go-ini/ini"
 	"tools"
 )
 
-var docType = 1
-
 func main() {
-	flag.IntVar(&docType, "docType", 1, "docType")
-
+	cnf, _ := ini.Load("conf.ini")
+	var docType, _ = cnf.Section("").Key("flag").Int()
 	tools.InitCnf()
 
 	switch docType {
