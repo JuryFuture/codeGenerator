@@ -1,9 +1,7 @@
-package main
+package tools
 
 import (
-	"database/sql"
 	"fmt"
-	"github.com/go-ini/ini"
 	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"os"
@@ -23,9 +21,6 @@ const (
 var typeMap = make(map[string]string)
 
 var fieldNameTypeMap = make(map[string]string)
-
-// 配置文件
-var cnf *ini.File = nil
 
 // 包名
 var packageName string = ""
@@ -49,8 +44,6 @@ var date string = time.Now().Format("2006/01/02")
 var dateTime string = time.Now().Format("2006/01/02 15:04")
 
 func init() {
-	cnf, _ = ini.Load("conf.ini")
-
 	packageName = cnf.Section("class").Key("package").String()
 	author = cnf.Section("class").Key("author").String()
 
@@ -71,84 +64,6 @@ func check(err error) {
 	if err != nil {
 		panic(err)
 	}
-}
-
-// 读取数据库配置
-func readConf() (username, password, host, port, schema string) {
-	username = cnf.Section("mysql").Key("username").String()
-	password = cnf.Section("mysql").Key("password").String()
-	host = cnf.Section("mysql").Key("host").String()
-	port = cnf.Section("mysql").Key("port").String()
-	schema = cnf.Section("mysql").Key("schema").String()
-
-	return
-}
-
-// 初始化链接
-func connect(userName, password, host, port, schema string) *sql.DB {
-	url := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8", userName, password, host, port, schema)
-	fmt.Println(url)
-	db, err := sql.Open("mysql", url)
-	check(err)
-
-	db.SetMaxOpenConns(4)
-	db.SetMaxIdleConns(1)
-	db.Ping()
-
-	return db
-}
-
-// 读取数据库中所有的表
-func readTables(tables []string) (tableNames, tableComments []string) {
-	db := connect(readConf())
-
-	defer db.Close()
-
-	schema := cnf.Section("mysql").Key("schema").String()
-	sql := "SELECT TABLE_NAME,TABLE_COMMENT FROM information_schema.`TABLES` WHERE table_schema = '" + schema + "' AND table_type = 'base table'"
-	if len(tables) > 0 {
-		sql += " AND TABLE_NAME in ('" + strings.Join(tables, "','") + "')"
-	}
-	rows, _ := db.Query(sql)
-
-	tableNames = make([]string, 0)
-	tableComments = make([]string, 0)
-
-	for rows.Next() {
-		var tableName, tableComment string
-		rows.Scan(&tableName, &tableComment)
-		tableNames = append(tableNames, tableName)
-		tableComments = append(tableComments, tableComment)
-	}
-
-	return
-}
-
-// 读取表的所有列
-func readColumns(table string) (columnNames, dataTypes, columnComments, extras []string) {
-	db := connect(readConf())
-
-	defer db.Close()
-
-	schema := cnf.Section("mysql").Key("schema").String()
-	rows, _ := db.Query("select COLUMN_NAME,DATA_TYPE,COLUMN_COMMENT,EXTRA from information_schema.columns where table_schema='" + schema + "' and table_name='" + table + "'")
-
-	columnNames = make([]string, 0)
-	dataTypes = make([]string, 0)
-	columnComments = make([]string, 0)
-	extras = make([]string, 0)
-
-	for rows.Next() {
-		var columnName, dataType, columnComment, extra string
-		rows.Scan(&columnName, &dataType, &columnComment, &extra)
-
-		columnNames = append(columnNames, columnName)
-		dataTypes = append(dataTypes, dataType)
-		columnComments = append(columnComments, columnComment)
-		extras = append(extras, extra)
-	}
-
-	return
 }
 
 // 表名转换为类名
@@ -183,7 +98,7 @@ func getFieldName(column string) (field string) {
 
 // 生成类信息
 func generateClass(table, comment string) {
-	file, _ := os.Open("template/class")
+	file, _ := os.Open("../template/class")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -227,7 +142,7 @@ func generateClass(table, comment string) {
 
 // 生成属性
 func generatorField(columnName, dataType, columnComment, extra string) (filed string) {
-	file, _ := os.Open("template/field")
+	file, _ := os.Open("../template/field")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -265,7 +180,7 @@ func generatorField(columnName, dataType, columnComment, extra string) (filed st
 
 // 生成方法
 func generatorMethod(columnName string) (method string) {
-	file, _ := os.Open("template/method")
+	file, _ := os.Open("../template/method")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -285,7 +200,7 @@ func generatorMethod(columnName string) (method string) {
 
 // 生成toString
 func generatorToString(className string, columnNames []string) (str string) {
-	file, _ := os.Open("template/toString")
+	file, _ := os.Open("../template/toString")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -303,7 +218,7 @@ func generatorToString(className string, columnNames []string) (str string) {
 	return
 }
 
-func main() {
+func GenerateJava() {
 	tables := cnf.Section("mysql").Key("tables").String()
 	tableNames, tableComments := readTables(strings.Split(tables, ","))
 
