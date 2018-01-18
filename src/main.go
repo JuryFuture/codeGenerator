@@ -3,7 +3,6 @@ package main
 import (
 	"flag"
 	"tools"
-	"fmt"
 )
 
 var docType = 1

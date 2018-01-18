@@ -2,10 +2,10 @@ package tools
 
 import (
 	"fmt"
+	"github.com/go-ini/ini"
 	"os"
 	"strconv"
 	"strings"
-	"github.com/go-ini/ini"
 )
 
 var TABLE_TEMPLATE = "<p>-----------------------------</p><span>表名称: {{table_name}}</span></br><span>行数: {{column_num}}</span></br><span>注释: {{table_comment}}</span><table cellspacing='0'><thead><tr><td>字段名</th><td>类型</td><td>说明</td></tr></thead>{{items}}</table></br>"
