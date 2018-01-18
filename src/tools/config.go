@@ -5,10 +5,10 @@ import (
 )
 
 // 配置文件
-var cnf *ini.File = nil
+var cnf *ini.File
 
-func init() {
-	cnf, _ = ini.Load("../conf.ini")
+func InitCnf() {
+	cnf, _ = ini.Load("conf.ini")
 }
 
 // 读取数据库配置

@@ -23,16 +23,16 @@ var typeMap = make(map[string]string)
 var fieldNameTypeMap = make(map[string]string)
 
 // 包名
-var packageName string = ""
+var packageName string
 
 // 作者
-var author string = ""
+var author string
 
 // 表名前缀
-var tablePrefix string = ""
+var tablePrefix string
 
 // 字段名前缀
-var columnPrefix string = ""
+var columnPrefix string
 
 // 年
 var year string = time.Now().Format("2006")
@@ -44,14 +44,6 @@ var date string = time.Now().Format("2006/01/02")
 var dateTime string = time.Now().Format("2006/01/02 15:04")
 
 func init() {
-	packageName = cnf.Section("class").Key("package").String()
-	author = cnf.Section("class").Key("author").String()
-
-	tablePrefix = cnf.Section("prefix").Key("tablePrefix").String()
-	columnPrefix = cnf.Section("prefix").Key("columnPrefix").String()
-
-	fmt.Println(tablePrefix, columnPrefix)
-
 	typeMap[DATE_TYPE_INT] = "int"
 	typeMap[DATE_TYPE_VARCHAR] = "String"
 	typeMap[DATE_TYPE_TINYINT] = "int"
@@ -98,7 +90,7 @@ func getFieldName(column string) (field string) {
 
 // 生成类信息
 func generateClass(table, comment string) {
-	file, _ := os.Open("../template/class")
+	file, _ := os.Open("template/class")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -142,7 +134,7 @@ func generateClass(table, comment string) {
 
 // 生成属性
 func generatorField(columnName, dataType, columnComment, extra string) (filed string) {
-	file, _ := os.Open("../template/field")
+	file, _ := os.Open("template/field")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -180,7 +172,7 @@ func generatorField(columnName, dataType, columnComment, extra string) (filed st
 
 // 生成方法
 func generatorMethod(columnName string) (method string) {
-	file, _ := os.Open("../template/method")
+	file, _ := os.Open("template/method")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -200,7 +192,7 @@ func generatorMethod(columnName string) (method string) {
 
 // 生成toString
 func generatorToString(className string, columnNames []string) (str string) {
-	file, _ := os.Open("../template/toString")
+	file, _ := os.Open("template/toString")
 	defer file.Close()
 
 	data, _ := ioutil.ReadFile(file.Name())
@@ -219,6 +211,14 @@ func generatorToString(className string, columnNames []string) (str string) {
 }
 
 func GenerateJava() {
+	packageName = cnf.Section("class").Key("package").String()
+	author = cnf.Section("class").Key("author").String()
+
+	tablePrefix = cnf.Section("prefix").Key("tablePrefix").String()
+	columnPrefix = cnf.Section("prefix").Key("columnPrefix").String()
+
+	fmt.Println(tablePrefix, columnPrefix)
+
 	tables := cnf.Section("mysql").Key("tables").String()
 	tableNames, tableComments := readTables(strings.Split(tables, ","))
 
