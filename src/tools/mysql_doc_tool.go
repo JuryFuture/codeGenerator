@@ -22,7 +22,11 @@ func generateHtml(str string) {
 
 func GenerateDoc() {
 	tables := cnf.Section("mysql").Key("tables").String()
-	tableNames, tableComments := readTables(strings.Split(tables, ","))
+	tableList := make([]string, 0)
+	if tables != "" {
+		tableList = strings.Split(tables, ",")
+	}
+	tableNames, tableComments := readTables(tableList)
 
 	var tableStr string = ""
 	for i := 0; i < len(tableNames); i++ {
