@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/go-ini/ini"
 	"tools"
 )
@@ -16,4 +17,8 @@ func main() {
 	case 2:
 		tools.GenerateDoc()
 	}
+
+	// 等待控制台
+	var a string
+	fmt.Scanf("%s", a)
 }
