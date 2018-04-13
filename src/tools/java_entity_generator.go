@@ -35,13 +35,13 @@ var tablePrefix string
 var columnPrefix string
 
 // 年
-var year string = time.Now().Format("2006")
+var year = time.Now().Format("2006")
 
 // 日期
-var date string = time.Now().Format("2006/01/02")
+var date = time.Now().Format("2006/01/02")
 
 // 时间
-var dateTime string = time.Now().Format("2006/01/02 15:04")
+var dateTime = time.Now().Format("2006/01/02 15:04:05")
 
 func init() {
 	typeMap[DATE_TYPE_INT] = "int"
