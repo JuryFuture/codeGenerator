@@ -33,7 +33,7 @@ func GenerateDoc() {
 		tableTmplate := strings.Replace(TABLE_TEMPLATE, "{{table_name}}", tableNames[i], -1)
 		tableTmplate = strings.Replace(tableTmplate, "{{table_comment}}", tableComments[i], -1)
 
-		columnNames, columnTypes, columnComments, _ := readColumns(tableNames[i])
+		columnNames, columnTypes, columnComments, _ := readColumns(tableNames[i], 2)
 
 		tableTmplate = strings.Replace(tableTmplate, "{{column_num}}", strconv.Itoa(len(columnNames)+1), -1)
 

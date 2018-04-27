@@ -107,7 +107,7 @@ func generateClass(table, comment string) {
 	className := getClassName(table)
 	content = strings.Replace(content, "{className}", className, -1)
 
-	columnNames, dataTypes, columnComments, extras := readColumns(table)
+	columnNames, dataTypes, columnComments, extras := readColumns(table, 1)
 
 	fields := ""
 	methods := ""
