@@ -61,7 +61,7 @@ func check(err error) {
 // 表名转换为类名
 func getClassName(table string) (class string) {
 	if tablePrefix != "" {
-		table = strings.Replace(table, tablePrefix, "", -1)
+		table = strings.Replace(table, tablePrefix, "", 1)
 	}
 
 	subNames := strings.Split(table, "_")
