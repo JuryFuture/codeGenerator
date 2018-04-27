@@ -47,14 +47,18 @@ func readTables(tables []string) (tableNames, tableComments []string) {
 }
 
 // 读取表的所有列
-func readColumns(table string) (columnNames, dataTypes, columnComments, extras []string) {
+func readColumns(table string, op int) (columnNames, dataTypes, columnComments, extras []string) {
 	db := connect(readConf())
 
 	defer db.Close()
 
 	schema := cnf.Section("mysql").Key("schema").String()
-	rows, _ := db.Query("select COLUMN_NAME,COLUMN_TYPE,COLUMN_COMMENT,EXTRA from information_schema.columns where table_schema='" + schema + "' and table_name='" + table + "'")
-
+	var rows *sql.Rows
+	if op == 1 {
+		rows, _ = db.Query("select COLUMN_NAME,DATA_TYPE,COLUMN_COMMENT,EXTRA from information_schema.columns where table_schema='" + schema + "' and table_name='" + table + "'")
+	} else if op == 2 {
+		rows, _ = db.Query("select COLUMN_NAME,COLUMN_TYPE,COLUMN_COMMENT,EXTRA from information_schema.columns where table_schema='" + schema + "' and table_name='" + table + "'")
+	}
 	columnNames = make([]string, 0)
 	dataTypes = make([]string, 0)
 	columnComments = make([]string, 0)

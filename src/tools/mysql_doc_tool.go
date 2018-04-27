@@ -28,7 +28,7 @@ func GenerateDoc() {
 	}
 	tableNames, tableComments := readTables(tableList)
 
-	var tableStr string = ""
+	var tableStr = ""
 	for i := 0; i < len(tableNames); i++ {
 		tableTmplate := strings.Replace(TABLE_TEMPLATE, "{{table_name}}", tableNames[i], -1)
 		tableTmplate = strings.Replace(tableTmplate, "{{table_comment}}", tableComments[i], -1)
