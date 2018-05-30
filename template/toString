@@ -1,4 +1,4 @@
     @Override
     public String toString() {
-        return "{className}{" + {content} + "}";
+        return "{{.ClassName}}{" + {{.Content}} + "}";
     }

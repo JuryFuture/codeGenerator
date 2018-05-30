@@ -96,16 +96,16 @@ func generateClass(table, comment string) {
 	data, _ := ioutil.ReadFile(file.Name())
 
 	content := string(data)
-	content = strings.Replace(content, "{tableName}", table, -1)
-	content = strings.Replace(content, "{tableComment}", comment, -1)
-	content = strings.Replace(content, "{packageName}", packageName, -1)
-	content = strings.Replace(content, "{date}", date, -1)
-	content = strings.Replace(content, "{dateTime}", dateTime, -1)
-	content = strings.Replace(content, "{author}", author, -1)
-	content = strings.Replace(content, "{year}", year, -1)
+	content = strings.Replace(content, "{{.TableName}}", table, -1)
+	content = strings.Replace(content, "{{.TableComment}}", comment, -1)
+	content = strings.Replace(content, "{{.PackageName}}", packageName, -1)
+	content = strings.Replace(content, "{{.Date}}", date, -1)
+	content = strings.Replace(content, "{{.DateTime}}", dateTime, -1)
+	content = strings.Replace(content, "{{.Author}}", author, -1)
+	content = strings.Replace(content, "{{.Year}}", year, -1)
 
 	className := getClassName(table)
-	content = strings.Replace(content, "{className}", className, -1)
+	content = strings.Replace(content, "{{.ClassName}}", className, -1)
 
 	columnNames, dataTypes, columnComments, extras := readColumns(table, 1)
 
@@ -115,11 +115,11 @@ func generateClass(table, comment string) {
 		fields += generatorField(columnNames[i], dataTypes[i], columnComments[i], extras[i]) + "\n"
 		methods += generatorMethod(columnNames[i]) + "\n"
 	}
-	content = strings.Replace(content, "{fields}", fields, -1)
-	content = strings.Replace(content, "{methods}", methods, -1)
+	content = strings.Replace(content, "{{.Fields}}", fields, -1)
+	content = strings.Replace(content, "{{.Methods}}", methods, -1)
 
 	toString := generatorToString(className, columnNames)
-	content = strings.Replace(content, "{toString}", toString, -1)
+	content = strings.Replace(content, "{{.ToString}}", toString, -1)
 
 	dirName := "./class"
 	os.Mkdir(dirName, 0777)
@@ -140,30 +140,30 @@ func generatorField(columnName, dataType, columnComment, extra string) (filed st
 	data, _ := ioutil.ReadFile(file.Name())
 
 	filed = string(data)
-	filed = strings.Replace(filed, "{comment}", columnComment, -1)
+	filed = strings.Replace(filed, "{{.Comment}}", columnComment, -1)
 	if extra == "auto_increment" {
 		extra = "\n    @Id\n    @GeneratedValue(strategy = GenerationType.AUTO)"
 	} else {
 		extra = ""
 	}
-	filed = strings.Replace(filed, "{extra}", extra, -1)
-	filed = strings.Replace(filed, "{column}", columnName, -1)
+	filed = strings.Replace(filed, "{{.Extra}}", extra, -1)
+	filed = strings.Replace(filed, "{{.Column}}", columnName, -1)
 
 	fieldType := typeMap[dataType]
 	reg := regexp.MustCompile(".*[i/I]d")
 	if dataType == DATE_TYPE_INT && reg.MatchString(columnName) {
 		fieldType = "long"
 	}
-	filed = strings.Replace(filed, "{fieldType}", fieldType, -1)
+	filed = strings.Replace(filed, "{{.FieldType}}", fieldType, -1)
 
 	others := ""
 	if dataType == DATE_TYPE_DATETIME || dataType == DATE_TYPE_TIMESTAMP {
 		others = "\n    @Temporal(TemporalType.TIMESTAMP)"
 	}
-	filed = strings.Replace(filed, "{others}", others, -1)
+	filed = strings.Replace(filed, "{{.Others}}", others, -1)
 
 	fieldName := getFieldName(columnName)
-	filed = strings.Replace(filed, "{fieldName}", fieldName, -1)
+	filed = strings.Replace(filed, "{{.FieldName}}", fieldName, -1)
 
 	fieldNameTypeMap[columnName] = fieldType
 
@@ -179,10 +179,10 @@ func generatorMethod(columnName string) (method string) {
 
 	method = string(data)
 	fieldType := fieldNameTypeMap[columnName]
-	method = strings.Replace(method, "{fieldType}", fieldType, -1)
+	method = strings.Replace(method, "{{.FieldType}}", fieldType, -1)
 
 	fieldName := getFieldName(columnName)
-	method = strings.Replace(method, "{fieldName}", fieldName, -1)
+	method = strings.Replace(method, "{{.FieldName}}", fieldName, -1)
 
 	upperFieldName := strings.ToUpper(fieldName[:1]) + fieldName[1:]
 	method = strings.Replace(method, "{upperFieldName}", upperFieldName, -1)
@@ -198,7 +198,7 @@ func generatorToString(className string, columnNames []string) (str string) {
 	data, _ := ioutil.ReadFile(file.Name())
 
 	str = string(data)
-	str = strings.Replace(str, "{className}", className, -1)
+	str = strings.Replace(str, "{{.ClassName}}", className, -1)
 
 	content := ""
 	for i := 0; i < len(columnNames); i++ {
@@ -206,7 +206,7 @@ func generatorToString(className string, columnNames []string) (str string) {
 		content += " + \"," + fieldName + "=\" + " + fieldName
 	}
 	content = "\"" + content[5:]
-	str = strings.Replace(str, "{content}", content, -1)
+	str = strings.Replace(str, "{{.Content}}", content, -1)
 	return
 }
 

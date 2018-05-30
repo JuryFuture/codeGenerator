@@ -1,5 +1,5 @@
     /**
-     * {comment}
-     */{extra}
-    @Column(name = "{column}"){others}
-    private {fieldType} {fieldName};
+     * {{.Comment}}
+     */{{.Extra}}
+    @Column(name = "{{.Column}}"){{.Others}}
+    private {{.FieldType}} {{.FieldName}};
