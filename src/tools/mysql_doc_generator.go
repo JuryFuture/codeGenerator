@@ -1,6 +1,7 @@
 package tools
 
 import (
+	"config"
 	"fmt"
 	"os"
 	"strconv"
@@ -21,7 +22,7 @@ func generateHtml(str string) {
 }
 
 func GenerateDoc() {
-	tables := cnf.Section("mysql").Key("tables").String()
+	tables := config.Cnf.Section("mysql").Key("tables").String()
 	tableList := make([]string, 0)
 	if tables != "" {
 		tableList = strings.Split(tables, ",")

@@ -1,8 +1,8 @@
 package tools
 
 import (
+	"config"
 	"fmt"
-	_ "github.com/go-sql-driver/mysql"
 	"io/ioutil"
 	"os"
 	"regexp"
@@ -14,6 +14,7 @@ const (
 	DATE_TYPE_INT       = "int"
 	DATE_TYPE_VARCHAR   = "varchar"
 	DATE_TYPE_TINYINT   = "tinyint"
+	DATE_TYPE_DATE      = "date"
 	DATE_TYPE_DATETIME  = "datetime"
 	DATE_TYPE_TIMESTAMP = "timestamp"
 )
@@ -47,6 +48,7 @@ func init() {
 	typeMap[DATE_TYPE_INT] = "int"
 	typeMap[DATE_TYPE_VARCHAR] = "String"
 	typeMap[DATE_TYPE_TINYINT] = "int"
+	typeMap[DATE_TYPE_DATE] = "Date"
 	typeMap[DATE_TYPE_DATETIME] = "Date"
 	typeMap[DATE_TYPE_TIMESTAMP] = "Date"
 	fmt.Println(typeMap)
@@ -157,7 +159,7 @@ func generatorField(columnName, dataType, columnComment, extra string) (filed st
 	filed = strings.Replace(filed, "{{.FieldType}}", fieldType, -1)
 
 	others := ""
-	if dataType == DATE_TYPE_DATETIME || dataType == DATE_TYPE_TIMESTAMP {
+	if dataType == DATE_TYPE_DATE || dataType == DATE_TYPE_DATETIME || dataType == DATE_TYPE_TIMESTAMP {
 		others = "\n    @Temporal(TemporalType.TIMESTAMP)"
 	}
 	filed = strings.Replace(filed, "{{.Others}}", others, -1)
@@ -185,7 +187,7 @@ func generatorMethod(columnName string) (method string) {
 	method = strings.Replace(method, "{{.FieldName}}", fieldName, -1)
 
 	upperFieldName := strings.ToUpper(fieldName[:1]) + fieldName[1:]
-	method = strings.Replace(method, "{upperFieldName}", upperFieldName, -1)
+	method = strings.Replace(method, "{{{.UpperFieldName}}}", upperFieldName, -1)
 
 	return
 }
@@ -211,15 +213,15 @@ func generatorToString(className string, columnNames []string) (str string) {
 }
 
 func GenerateJava() {
-	packageName = cnf.Section("class").Key("package").String()
-	author = cnf.Section("class").Key("author").String()
+	packageName = config.Cnf.Section("class").Key("package").String()
+	author = config.Cnf.Section("class").Key("author").String()
 
-	tablePrefix = cnf.Section("prefix").Key("tablePrefix").String()
-	columnPrefix = cnf.Section("prefix").Key("columnPrefix").String()
+	tablePrefix = config.Cnf.Section("prefix").Key("tablePrefix").String()
+	columnPrefix = config.Cnf.Section("prefix").Key("columnPrefix").String()
 
 	fmt.Println(tablePrefix, columnPrefix)
 
-	tables := cnf.Section("mysql").Key("tables").String()
+	tables := config.Cnf.Section("mysql").Key("tables").String()
 	tableNames, tableComments := readTables(strings.Split(tables, ","))
 
 	for i := 0; i < len(tableNames); i++ {

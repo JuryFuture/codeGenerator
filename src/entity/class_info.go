@@ -1,4 +1,4 @@
-package tools
+package entity
 
 type ClassInfo struct {
 	PackageName  string

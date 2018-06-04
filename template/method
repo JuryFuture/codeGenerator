@@ -1,7 +1,7 @@
-    public {{.FieldType}} get{upperFieldName}() {
+    public {{.FieldType}} get{{{.UpperFieldName}}}() {
         return {{.FieldName}};
     }
 
-    public void set{upperFieldName}({{.FieldType}} {{.FieldName}}) {
+    public void set{{{.UpperFieldName}}}({{.FieldType}} {{.FieldName}}) {
         this.{{.FieldName}} = {{.FieldName}};
     }

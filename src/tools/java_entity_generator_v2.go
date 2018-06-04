@@ -1,28 +1,57 @@
 package tools
 
 import (
-	"io/ioutil"
+	"config"
+	"entity"
+	"fmt"
 	"os"
+	"strings"
+	"text/template"
 )
 
-// 1.生成模板文件
-func GenerateTemplateFile(table string) {
-	file, _ := os.Open("../../template/class_v2")
-	defer file.Close()
+var DIRNAME = "./class/"
 
-	template, _ := ioutil.ReadFile(file.Name())
-	content := string(template)
+var TEMPLATE_FILE = "template/"
 
-	dirName := "./class"
-	os.Mkdir(dirName, 0777)
+func GenerateJavaV2() {
+	packageName = config.Cnf.Section("class").Key("package").String()
+	author = config.Cnf.Section("class").Key("author").String()
 
-	className := getClassName(table)
-	fileName := dirName + "/" + className + ".java"
-	class, _ := os.Create(fileName)
+	tablePrefix = config.Cnf.Section("prefix").Key("tablePrefix").String()
+	columnPrefix = config.Cnf.Section("prefix").Key("columnPrefix").String()
 
-	defer class.Close()
+	fmt.Println(tablePrefix, columnPrefix)
 
-	class.WriteString(content)
+	tables := config.Cnf.Section("mysql").Key("tables").String()
+	tableNames, tableComments := readTables(strings.Split(tables, ","))
+
+	os.Mkdir(DIRNAME, 777)
+
+	for i := 0; i < len(tableNames); i++ {
+		generateClassV2(tableNames[i], tableComments[i])
+	}
+
+	fmt.Printf("共%d个表\n", len(tableNames))
 }
 
-// 2.生成最终文件
+func generateClassV2(table, comment string) {
+	className := getClassName(table)
+	fields := ""
+	methods := ""
+	columnNames, dataTypes, columnComments, extras := readColumns(table, 1)
+	for i := 0; i < len(columnNames); i++ {
+		fields += generatorField(columnNames[i], dataTypes[i], columnComments[i], extras[i]) + "\n"
+		methods += generatorMethod(columnNames[i]) + "\n"
+	}
+	toString := generatorToString(className, columnNames)
+
+	classInfo := &entity.ClassInfo{packageName, className, dateTime, year, comment, author, date, table, fields, methods, toString}
+
+	tmpl, _ := template.ParseFiles(TEMPLATE_FILE + "class")
+
+	javaFileName := DIRNAME + className + ".java"
+	javaFile, _ := os.Create(javaFileName)
+	defer javaFile.Close()
+
+	tmpl.Execute(javaFile, classInfo)
+}

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"config"
 	"fmt"
 	"github.com/go-ini/ini"
 	"tools"
@@ -9,11 +10,11 @@ import (
 func main() {
 	cnf, _ := ini.Load("conf.ini")
 	var docType, _ = cnf.Section("").Key("flag").Int()
-	tools.InitCnf()
+	config.InitCnf()
 
 	switch docType {
 	case 1:
-		tools.GenerateJava()
+		tools.GenerateJavaV2()
 	case 2:
 		tools.GenerateDoc()
 	}
