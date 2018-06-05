@@ -1,0 +1,50 @@
+/**
+ * Project Name: saas
+ * File Name: {{.ClassName}}.java
+ * Package Name: {{.PackageName}}
+ * Date: {{.DateTime}}
+ * Copyright (c) {{.Year}}, www.huizhaofang.com All Rights Reserved.
+ */
+package {{.PackageName}};
+
+import java.util.Date;
+
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+
+/**
+ * @Description: {{.TableComment}}
+ * @Author: {{.Author}}
+ * @Date: {{.Date}}
+ */
+@Entity
+@Table(name = "{{.TableName}}")
+public class {{.ClassName}} {
+{{range .Fields}}
+    /**
+     * {{.Comment}}
+     */{{.Extra}}
+    @Column(name = "{{.Column}}"){{.Others}}
+    private {{.FieldType}} {{.FieldName}};
+{{end}}
+{{range .Methods}}
+    public {{.FieldType}} get{{.UpperFieldName}}() {
+        return {{.FieldName}};
+    }
+
+    public void set{{.UpperFieldName}}({{.FieldType}} {{.FieldName}}) {
+        this.{{.FieldName}} = {{.FieldName}};
+    }
+{{end}}
+{{$a := 0}}
+    @Override
+    public String toString() {
+        return "{{.ClassName}}{"{{range $index, $_ := .Fields}} + {{if eq $index $a}}"{{.FieldName}}="{{else}}",{{.FieldName}}="{{end}} + {{.FieldName}} {{end}} + "}";
+    }
+}

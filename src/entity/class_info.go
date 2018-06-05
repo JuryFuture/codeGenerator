@@ -9,7 +9,6 @@ type ClassInfo struct {
 	Author       string
 	Date         string
 	TableName    string
-	Fields       string
-	Methods      string
-	ToString     string
+	Fields       []FieldInfo
+	Methods      []MethodInfo
 }

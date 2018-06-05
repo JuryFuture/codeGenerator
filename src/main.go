@@ -3,14 +3,12 @@ package main
 import (
 	"config"
 	"fmt"
-	"github.com/go-ini/ini"
 	"tools"
 )
 
 func main() {
-	cnf, _ := ini.Load("conf.ini")
-	var docType, _ = cnf.Section("").Key("flag").Int()
 	config.InitCnf()
+	var docType, _ = config.Cnf.Section("").Key("flag").Int()
 
 	switch docType {
 	case 1:

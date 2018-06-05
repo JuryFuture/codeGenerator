@@ -1,7 +1,13 @@
 package tools
 
-import "testing"
+import (
+	"config"
+	"fmt"
+	"testing"
+)
 
-func TestGenerateTemplateFile(t *testing.T) {
-	GenerateTemplateFile("test")
+func TestGenerateJavaV2(t *testing.T) {
+	config.InitCnf()
+	fmt.Println(config.Cnf)
+	GenerateJavaV2()
 }

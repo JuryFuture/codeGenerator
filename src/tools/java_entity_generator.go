@@ -114,13 +114,13 @@ func generateClass(table, comment string) {
 	fields := ""
 	methods := ""
 	for i := 0; i < len(columnNames); i++ {
-		fields += generatorField(columnNames[i], dataTypes[i], columnComments[i], extras[i]) + "\n"
-		methods += generatorMethod(columnNames[i]) + "\n"
+		fields += generateField(columnNames[i], dataTypes[i], columnComments[i], extras[i]) + "\n"
+		methods += generateMethod(columnNames[i]) + "\n"
 	}
 	content = strings.Replace(content, "{{.Fields}}", fields, -1)
 	content = strings.Replace(content, "{{.Methods}}", methods, -1)
 
-	toString := generatorToString(className, columnNames)
+	toString := generateToString(className, columnNames)
 	content = strings.Replace(content, "{{.ToString}}", toString, -1)
 
 	dirName := "./class"
@@ -135,7 +135,7 @@ func generateClass(table, comment string) {
 }
 
 // 生成属性
-func generatorField(columnName, dataType, columnComment, extra string) (filed string) {
+func generateField(columnName, dataType, columnComment, extra string) (filed string) {
 	file, _ := os.Open("template/field")
 	defer file.Close()
 
@@ -173,7 +173,7 @@ func generatorField(columnName, dataType, columnComment, extra string) (filed st
 }
 
 // 生成方法
-func generatorMethod(columnName string) (method string) {
+func generateMethod(columnName string) (method string) {
 	file, _ := os.Open("template/method")
 	defer file.Close()
 
@@ -193,7 +193,7 @@ func generatorMethod(columnName string) (method string) {
 }
 
 // 生成toString
-func generatorToString(className string, columnNames []string) (str string) {
+func generateToString(className string, columnNames []string) (str string) {
 	file, _ := os.Open("template/toString")
 	defer file.Close()
 
