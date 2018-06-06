@@ -14,7 +14,7 @@ func main() {
 	case 1:
 		tools.GenerateJavaV2()
 	case 2:
-		tools.GenerateDoc()
+		tools.GenerateDocV2()
 	}
 
 	// 等待控制台

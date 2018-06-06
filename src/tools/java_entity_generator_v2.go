@@ -10,7 +10,7 @@ import (
 	"text/template"
 )
 
-var DIRNAME = "./class/"
+var DIRNAME_CLASS = "./class/"
 
 var TEMPLATE_FILE = "template/"
 
@@ -30,7 +30,7 @@ func GenerateJavaV2() {
 	tables := config.Cnf.Section("mysql").Key("tables").String()
 	tableNames, tableComments := readTables(strings.Split(tables, ","))
 
-	os.Mkdir(DIRNAME, 777)
+	os.Mkdir(DIRNAME_CLASS, 777)
 
 	for i := 0; i < len(tableNames); i++ {
 		go generateClassV2(tableNames[i], tableComments[i])
@@ -57,7 +57,7 @@ func generateClassV2(table, comment string) {
 
 	tmpl, _ := template.ParseFiles(TEMPLATE_FILE + "class_v2")
 
-	javaFileName := DIRNAME + className + ".java"
+	javaFileName := DIRNAME_CLASS + className + ".java"
 	javaFile, _ := os.Create(javaFileName)
 	defer javaFile.Close()
 
