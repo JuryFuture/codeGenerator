@@ -33,7 +33,7 @@ func GenerateJavaV2() {
 	os.Mkdir(DIRNAME, 777)
 
 	for i := 0; i < len(tableNames); i++ {
-		generateClassV2(tableNames[i], tableComments[i])
+		go generateClassV2(tableNames[i], tableComments[i])
 	}
 
 	fmt.Printf("共%d个表\n", len(tableNames))
@@ -49,7 +49,7 @@ func generateClassV2(table, comment string) {
 		filed := getFieldInfo(columnNames[i], dataTypes[i], columnComments[i], extras[i])
 		fields = append(fields, filed)
 
-		method := getMethodInfo(columnNames[i])
+		method := getMethodInfo(columnNames[i], dataTypes[i])
 		methods = append(methods, method)
 	}
 
@@ -71,7 +71,6 @@ func getFieldInfo(columnName, dataType, columnComment, extra string) (filedInfo 
 	if dataType == DATE_TYPE_INT && reg.MatchString(columnName) {
 		fieldType = "long"
 	}
-	fieldNameTypeMap[columnName] = fieldType
 
 	fieldName := getFieldName(columnName)
 
@@ -92,8 +91,8 @@ func getFieldInfo(columnName, dataType, columnComment, extra string) (filedInfo 
 }
 
 // 生成getter/setter
-func getMethodInfo(columnName string) (methodInfo entity.MethodInfo) {
-	fieldType := fieldNameTypeMap[columnName]
+func getMethodInfo(columnName, dataType string) (methodInfo entity.MethodInfo) {
+	fieldType := typeMap[dataType]
 
 	fieldName := getFieldName(columnName)
 
