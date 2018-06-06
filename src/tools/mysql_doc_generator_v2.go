@@ -13,7 +13,7 @@ import (
 var DIRNAME_DOC = "./html/"
 
 func GenerateDocV2() {
-	fmt.Println("http://127.0.0.1:0811/index")
+	fmt.Println("请访问：", "http://127.0.0.1:0811/index")
 
 	http.HandleFunc("/index", handler)
 	http.ListenAndServe(":0811", nil)
