@@ -93,6 +93,10 @@ func getFieldInfo(columnName, dataType, columnComment, extra string) (filedInfo 
 // 生成getter/setter
 func getMethodInfo(columnName, dataType string) (methodInfo entity.MethodInfo) {
 	fieldType := typeMap[dataType]
+	reg := regexp.MustCompile(".*[i/I]d")
+	if dataType == DATE_TYPE_INT && reg.MatchString(columnName) {
+		fieldType = "long"
+	}
 
 	fieldName := getFieldName(columnName)
 
